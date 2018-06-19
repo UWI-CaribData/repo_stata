@@ -1,7 +1,6 @@
 ** CLOSE ANY OPEN LOG FILE AND OPEN A NEW LOG FILE
 capture log close
-cd "C:\Sync\OneDrive - The University of the West Indies\repo_caribdata\repo_stata\"
-log using equiplot_001, replace
+cd "X:\OneDrive - The University of the West Indies\repo_caribdata\repo_stata\"
 
 **  GENERAL DO-FILE COMMENTS
 **  program:      equiplot_001.do
@@ -18,11 +17,12 @@ set more 1
 set linesize 200
 
 
+** Data from CHowitt PhD (2017)
 ** Primary dataset created using --> d100_join_mr_datasets.do
 use "equiplot_001", clear
 label data "Inactivity prevalence in the Caribbean (source: CHowitt, 2017)"
 ** Re-label the countries to allow sensible xy-axis aspect ratio
-** UN 3-digit codes --> http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3, 
+** UN 3-digit codes --> http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3,
 label define country 	1 "abw"			/// aruba
 						2 "vgb"			/// bvi
 						3 "brb"			/// barbados
@@ -85,22 +85,22 @@ drop temp* country2_*
 		/// Line between min and max
 		(rspike prev1 prev2 country2 , 		hor lc(gs12) lw(0.35))
 		/// Minimum points
-		(sc country2 prev1, 				msize(7) m(o) mlc(gs0) mfc("198 219 239") mlw(0.1))
+		(sc country2 prev1, 				msize(5) m(o) mlc(gs0) mfc("198 219 239") mlw(0.1))
 		/// Maximum points
-		(sc country2 prev2 , 				msize(7) m(o) mlc(gs0) mfc("8 81 156") mlw(0.1))
+		(sc country2 prev2 , 				msize(5) m(o) mlc(gs0) mfc("8 81 156") mlw(0.1))
 		,
-			graphregion(color(gs16)) ysize(12) xsize(4.5)
+			graphregion(color(gs16)) ysize(10) xsize(4.5)
 
-			xlab(0(20)100 , labs(5) tlc(gs0) labc(gs0) nogrid glc(gs16))
+			xlab(0(20)100 , labs(4) tlc(gs0) labc(gs0) nogrid glc(gs16))
 			xscale(fill range(`range') lc(gs0))
-			xtitle("prevalence", size(5) color(gs0) margin(l=2 r=2 t=5 b=2))
+			xtitle("prevalence", size(4) color(gs0) margin(l=2 r=2 t=5 b=2))
 			xmtick(0(10)100, tlc(gs0))
 
 			ylab(1(1)14 16(1)29
 					,
-			valuelabel labc(gs0) labs(5) tstyle(major_notick) nogrid glc(gs16) angle(0) format(%9.0f))
+			valuelabel labc(gs0) labs(4) tstyle(major_notick) nogrid glc(gs16) angle(0) format(%9.0f))
 			yscale(noline lw(vthin) reverse range(0(1)30))
-				ytitle("", size(5) margin(l=2 r=5 t=2 b=2))
+				ytitle("", size(4) margin(l=2 r=5 t=2 b=2))
 
 			text(7 100 "Men", place(w) color(gs0) size(5.5))
 			text(21 100 "Women", place(w) color(gs0) size(5.5))
@@ -109,89 +109,7 @@ drop temp* country2_*
 				 "cym=Cayman Islands; dma=Dominica; dom=Dominican Republic"
 				 "grd=Grenada etc...")
 
-			legend( size(5) position(11) ring(1) bm(t=1 b=4 l=5 r=0) colf cols(2)
-			region(fcolor(gs16) lw(vthin) margin(l=2 r=2 t=2 b=2))
-			order(2 3)
-			lab(2 "Questionnaire")
-			lab(3 "Objective")
-			);
-#delimit cr
-
-/*
-
-** Graphics for Enviro-Health workshop April 12 2017
-** MEN INACTIVITY ACROSS THE CARIBBEAN
-keep if sex==1
-
-#delimit ;
-	gr twoway
-		/// Line between min and max
-		(rspike prev1 prev2 country2 , 		hor lc(gs12) lw(0.35))
-		/// Minimum points
-		(sc country2 prev1, 				msize(8) m(o) mlc(gs0) mfc("198 219 239") mlw(0.1))
-		/// Maximum points
-		(sc country2 prev2 , 				msize(8) m(o) mlc(gs0) mfc("8 81 156") mlw(0.1))
-		,
-			graphregion(color(gs16)) ysize(12) xsize(7)
-
-			xlab(0(20)100 , labs(6) tlc(gs0) labc(gs0) nogrid glc(gs16))
-			xscale(fill range(`range') lc(gs0))
-			xtitle("", size(6) color(gs0) margin(l=2 r=2 t=5 b=2))
-			xmtick(0(10)100, tlc(gs0))
-
-			ylab(1(1)14
-					,
-			valuelabel labc(gs0) labs(6) tstyle(major_notick) nogrid glc(gs16) angle(0) format(%9.0f))
-			yscale(noline lw(vthin) reverse range(0(1)15))
-				ytitle("", size(6) margin(l=2 r=5 t=2 b=2))
-
-			///text(7 100 "Men", place(w) color(gs0) size(5.5))
-			///text(21 100 "Women", place(w) color(gs0) size(5.5))
-
-			legend(off size(6) position(11) ring(1) bm(t=1 b=4 l=5 r=0) colf cols(2)
-			region(fcolor(gs16) lw(vthin) margin(l=2 r=2 t=2 b=2))
-			order(2 3)
-			lab(2 "Questionnaire")
-			lab(3 "Objective")
-			);
-#delimit cr
-
-
-/*
-** Graphics for Enviro-Health workshop April 12 2017
-** WOMEN INACTIVITY ACROSS THE CARIBBEAN
-keep if sex==2
-drop country2
-gen country2 = _n
-decode country , gen(temp)
-labmask country2, values(temp)
-
-#delimit ;
-	gr twoway
-		/// Line between min and max
-		(rspike prev1 prev2 country2 , 		hor lc(gs12) lw(0.35))
-		/// Minimum points
-		(sc country2 prev1, 				msize(8) m(o) mlc(gs0) mfc("255 204 170") mlw(0.1))
-		/// Maximum points
-		(sc country2 prev2 , 				msize(8) m(o) mlc(gs0) mfc("255 127 42") mlw(0.1))
-		,
-			graphregion(color(gs16)) ysize(12) xsize(7)
-
-			xlab(0(20)100 , labs(6) tlc(gs0) labc(gs0) nogrid glc(gs16))
-			xscale(fill range(`range') lc(gs0))
-			xtitle("", size(6) color(gs0) margin(l=2 r=2 t=5 b=2))
-			xmtick(0(10)100, tlc(gs0))
-
-			ylab(1(1)14
-					,
-			valuelabel labc(gs0) labs(6) tstyle(major_notick) nogrid glc(gs16) angle(0) format(%9.0f))
-			yscale(noline lw(vthin) reverse range(0(1)15))
-				ytitle("", size(6) margin(l=2 r=5 t=2 b=2))
-
-			///text(7 100 "Men", place(w) color(gs0) size(5.5))
-			///text(21 100 "Women", place(w) color(gs0) size(5.5))
-
-			legend(off size(6) position(11) ring(1) bm(t=1 b=4 l=5 r=0) colf cols(2)
+			legend( size(4) position(11) ring(1) bm(t=1 b=4 l=5 r=0) colf cols(2)
 			region(fcolor(gs16) lw(vthin) margin(l=2 r=2 t=2 b=2))
 			order(2 3)
 			lab(2 "Questionnaire")
